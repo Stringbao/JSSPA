@@ -2,21 +2,49 @@
 import SpaEngine from "@core/SpaEngine.js";
 
 let config = {
-    public_asset:{
-        css:["./modules/static/app.css"],
-        js:["./modules/static/tool.js"]
-    },
+    public_asset:[
+        "./modules/static/app.css",
+        "./modules/static/tool.js"
+    ],
     views:[
         {
+            
             key:"person",
-            router:"plist",
+            router:{
+                default:true,
+                url:"/",
+                beforeEnter:(data)=>{
+                    console.log("ready enter to:" + data._key);
+                },
+                afterEnter:(data)=>{
+
+                }
+            },
             store:"./modules/stores/person.js",
             template:"./modules/views/person.html",
-            controller:".",
-            dependencies:[]
-        }
+            controller:"./modules/controllers/person.js",
+            dependencies:[
+                "./modules/services/person.js"
+            ]
+        },
+        {
+            key:"car",
+            router:{
+                url:"/clist",
+                beforeEnter:(data)=>{
+                    console.log("ready enter to:" + data._key);
+                }
+            },
+            store:"./modules/stores/car.js",
+            template:"./modules/views/car.html",
+            controller:"./modules/controllers/car.js",
+            dependencies:[
+                "./modules/services/car.js"
+            ]
+        },
     ]
 }
 
 let spa_enging = new SpaEngine(config);
-spa_enging.run()
+window.spa_enging = spa_enging;
+spa_enging.run($("#app"));

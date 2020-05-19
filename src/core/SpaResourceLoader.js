@@ -1,5 +1,6 @@
 
-import define from "@@util/define.js";
+import $ from "jquery";
+import define from "@util/define.js";
 
 export default class SpaResourceLoader{
     constructor(){
@@ -22,12 +23,13 @@ export default class SpaResourceLoader{
                 link.rel = 'stylesheet';
                 link.href = x;
                 head.appendChild(link);
+                this.appendResource(x);
             });
             reslove();
         })
     }
 
-    appendJS(js){
+    appendJs(js){
         return new Promise((reslove,reject)=>{
             if(typeof js == "string"){
                 js = [js];
@@ -38,24 +40,41 @@ export default class SpaResourceLoader{
                 script.type = 'text/javascript';
                 script.src = x;
                 head.appendChild(script);
+                this.appendResource(x);
             });
             reslove();
         })
     }
 
-    appendFile(files){
+    loadFiles(files){
         let promises = [];
-        files.forEach(x=>{
+        for (let index = 0; index < files.length; index++) {
+            const x = files[index];
             let suff = x.substring(x.lastIndexOf('.') +1);
             switch(suff){
-                case define.SUFFIX.JS:
-                    promises.push(this.appendJS(x));
-                    break;
                 case define.SUFFIX.CSS:
-                    promises.push(this.appendCSS(x));
+                    promises.push(this.appendCss(x));
+                    break;
+                case define.SUFFIX.JS:
+                    promises.push(this.appendJs(x));
                     break;
             }
-        })
+        }
         return Promise.all(promises);
+    }
+
+    loadTemplate(url){
+        return new Promise((reslove,reject)=>{
+            $.ajax({
+                url:url,
+                success:function(d){
+                    reslove(d);
+                },
+                error:(err=>{
+                    reject(err.responseText);
+                })
+            })
+        })
+        
     }
 }

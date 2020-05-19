@@ -3,7 +3,7 @@ const webpack = require('webpack');
 const path = require("path");
 const argv = require('yargs-parser')(process.argv.slice(2));
 const _mode = argv.mode || 'development';
-const _mergeConfig = require(`./config/webpack.${_mode}`);
+const _mergeConfig = require(`./src/config/webpack.${_mode}`);
 const merge = require('webpack-merge');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
@@ -48,11 +48,7 @@ let webpackConfig = {
         extensions: ['.js', '.css', '.html'],
         alias: {
             "@core":path.resolve(__dirname,"./src/core"),
-            "@util":path.resolve(__dirname,"./src/util"),
-            "@views":path.resolve(__dirname,"./modules/views"),
-            "@apis":path.resolve(__dirname,"./modules/api"),
-            "@stores":path.resolve(__dirname,"./modules/stores"),
-            "@controllers":path.resolve(__dirname,"./modules/controllers")
+            "@util":path.resolve(__dirname,"./src/util")
         }
     },
     performance: {

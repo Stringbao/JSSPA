@@ -28,25 +28,9 @@ module.exports = {
     devServer: {
         inline: true, //检测文件变化，实时构建并刷新浏览器
         port: "9987",
-        openPage: './login.html',
+        openPage: './index.html',
         proxy: {
-            '/node': {
-                target: 'http://localhost:9998',
-                pathRewrite: {
-                    "^/node": ""
-                },
-                secure: false,
-                changeOrigin: true
-            },
-            '/': {
-                target: 'https://admin.nec.lenovouat.com',
-                // target: 'http://10.112.5.150',
-                // pathRewrite: {
-                //     "^/accountAPI": ""
-                // },
-                secure: false,
-                changeOrigin: true
-            }
+            
         },
         //404 页面返回 index.html
         historyApiFallback: true,
