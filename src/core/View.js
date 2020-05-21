@@ -1,40 +1,59 @@
 
-import DomMangager from "./DomMangager.js";
+
+import tool from "../util/tool.js";
+
 
 export default class View{
-    constructor(options){
-        this._key = options.key;
-        this._template = options.template;
-        this._controller = options.controller;
-        this._dependencies = options.dependencies;
+    constructor(name){
+        this._id = tool._idSeed.newId();
 
-        this._store = null;
-        this._router = null;
-        
-        this._cache = "";
+        this._name = name;
+        this._cache = {
+            template:""
+        };
     }
 
-    load(){
-        this._store = spa_enging._spaStoreManager.getStoreByKey(this._key);
-        this._router = spa_enging._spaRouterManager.getCurrentRouter();
-        
-        //执行beforeEnter
-        this._router._beforeEnter && this._router._beforeEnter(this);
+    init(options){
+        this._router = options.router;
+        this._template = options.template;
+        this._default = options.default==undefined?false:options.default;
 
-        //load all resources
-        spa_enging._spaResourceLoader.loadFiles(this._dependencies).then(x=>{
-            return spa_enging._spaResourceLoader.appendJs(this._store._store);
-        }).then(x=>{
-            return spa_enging._spaResourceLoader.appendJs(this._controller);
-        }).then(x=>{
-            if(this._cache){
-                DomMangager.appendToContainer(spa_enging._container,$(this._cache));
-            }else{
-                spa_enging._spaResourceLoader.loadTemplate(this._template).then(x=>{
-                    this._cache = x;
-                    DomMangager.appendToContainer(spa_enging._container,$(x));
-                })
-            }
-        })
+        this._beforeEnter = options.beforeEnter?options.beforeEnter:null;
+        this._beforeLeval = options.beforeLeval?options.beforeLeval:null;
+        this._destory = options.destory?options.destory:null;
+
+        this._css = [];
+        this._js = [];
+
+    }
+
+    $(selector){
+        return $("#"+this._id).find(selector);
+    }
+
+    onReady(){
+        
+    }
+
+    registerAsset(){
+
+    }
+
+    importStyle(files){
+        if(typeof files == "string"){
+            files = [files];
+        }
+        if(files instanceof Array){
+            this._css = files;
+        }
+    }
+    
+    importScript(files){
+        if(typeof files == "string"){
+            files = [files];
+        }
+        if(files instanceof Array){
+            this._js = files;
+        }
     }
 }

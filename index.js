@@ -8,43 +8,28 @@ let config = {
     ],
     views:[
         {
-            
-            key:"person",
-            router:{
-                default:true,
-                url:"/",
-                beforeEnter:(data)=>{
-                    console.log("ready enter to:" + data._key);
-                },
-                afterEnter:(data)=>{
-
-                }
-            },
-            store:"./modules/stores/person.js",
-            template:"./modules/views/person.html",
-            controller:"./modules/controllers/person.js",
-            dependencies:[
-                "./modules/services/person.js"
-            ]
+            default:true,
+            name:"person",
+            router:"/",
+            template:"./modules/views/person/person.html"
         },
         {
-            key:"car",
-            router:{
-                url:"/clist",
-                beforeEnter:(data)=>{
-                    console.log("ready enter to:" + data._key);
-                }
-            },
-            store:"./modules/stores/car.js",
-            template:"./modules/views/car.html",
-            controller:"./modules/controllers/car.js",
-            dependencies:[
-                "./modules/services/car.js"
-            ]
-        },
+            name:"car",
+            router:"/car",
+            template:"./modules/views/car/car.html"
+        }
     ]
 }
 
+import Person from "./modules/views/person/person.js";
+import Car from "./modules/views/car/car.js";
+
 let spa_enging = new SpaEngine(config);
 window.spa_enging = spa_enging;
+
+let person = new Person("person");
+let car = new Car("car");
+spa_enging.registerView(person);
+spa_enging.registerView(car);
+
 spa_enging.run($("#app"));
