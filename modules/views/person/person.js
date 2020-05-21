@@ -19,5 +19,6 @@ export default class Person extends View {
     }
 
     onBtnClick(){
+        spa_enging.switchViewByHash("/car");
     }
 }

@@ -7,7 +7,7 @@ export default class Car extends View {
     }
 
     registerAsset(){
-        this.importStyle("./module/views/car/car.css");
+        this.importStyle("./modules/views/car/car.css");
         this.importScript(["./modules/stores/car.js"]);
     }
 
@@ -19,6 +19,6 @@ export default class Car extends View {
     }
 
     onBtnClick(){
-
+        spa_enging.switchViewByHash("/");
     }
 }

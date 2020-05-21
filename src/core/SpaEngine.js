@@ -47,8 +47,7 @@ export default class SpaEngine{
         this._spaRouterManager.watchURI();
 
         util._event_publisher.on(define.URI.CHANGEHASH,(hash=>{
-            let view = tool.findViewByHash(this._views, hash);
-            this.switchView(view);
+            this.switchViewByHash(hash);
         }))
     }
 
@@ -59,6 +58,11 @@ export default class SpaEngine{
         this._spaViewManager.load(this._currentView,this._container).then(x=>{
             view.onReady();
         })
+    }
+
+    switchViewByHash(hash){
+        let view = tool.findViewByHash(this._views, hash);
+        this.switchView(view);
     }
 
     registerView(view){
