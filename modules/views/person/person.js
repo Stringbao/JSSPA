@@ -13,13 +13,11 @@ export default class Person extends View {
 
     onReady(){
         let that = this;
-        debugger
         this.$("#aaa").click(function(){
             that.onBtnClick();
         })
     }
 
     onBtnClick(){
-        debugger
     }
 }
