@@ -28,8 +28,7 @@ export default class View{
     }
 
     $(selector){
-        return $("#"+this._id);
-        // return $("#"+this._id).find(selector);
+        return $("#"+this._id).find(selector);
     }
 
     onReady(){
