@@ -1,5 +1,12 @@
 
 let Person = function(){
+
+    this.state = {
+        data:[
+            {name:"abc",id:"112",items:[]}
+        ]
+    }
+
     this.registerAsset = function(){
         this.registerStyle(["./modules/views/person/person.css"]);
         this.registerScript(["./modules/views/person/pp.js","./modules/stores/person.js"]);
