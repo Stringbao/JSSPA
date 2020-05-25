@@ -2,21 +2,19 @@
 
 import tool from "../util/tool.js";
 
-
 export default class View{
-    constructor(name){
+    constructor(){
         this._id = tool._idSeed.newId();
-
-        this._name = name;
         this._cache = {
             template:""
         };
     }
 
     init(options){
+        this._name = options.name;
         this._router = options.router;
         this._template = options.template;
-        this._default = options.default==undefined?false:options.default;
+        this._class = options.class;
 
         this._beforeEnter = options.beforeEnter?options.beforeEnter:null;
         this._beforeLeval = options.beforeLeval?options.beforeLeval:null;
@@ -24,7 +22,6 @@ export default class View{
 
         this._css = [];
         this._js = [];
-
     }
 
     $(selector){
@@ -39,7 +36,7 @@ export default class View{
 
     }
 
-    importStyle(files){
+    registerStyle(files){
         if(typeof files == "string"){
             files = [files];
         }
@@ -48,7 +45,7 @@ export default class View{
         }
     }
     
-    importScript(files){
+    registerScript(files){
         if(typeof files == "string"){
             files = [files];
         }

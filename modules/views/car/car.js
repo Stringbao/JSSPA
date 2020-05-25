@@ -1,24 +1,20 @@
-
-import View from "../../../src/core/View.js";
-
-export default class Car extends View {
-    constructor(name){
-        super(name);
+let Car = function(){
+    this.registerAsset = function(){
+        this.registerStyle(["./modules/views/car/car.css"]);
+        this.registerScript(["./modules/views/car/1.js","./modules/views/car/2.js","./modules/stores/car.js"]);
     }
 
-    registerAsset(){
-        this.importStyle("./modules/views/car/car.css");
-        this.importScript(["./modules/stores/car.js"]);
-    }
-
-    onReady(){
+    this.onReady = function(){
         let that = this;
-        this.$("#btn").click(function(){
+        this.$("#car").click(function(){
             that.onBtnClick();
         })
     }
 
-    onBtnClick(){
-        spa_enging.switchViewByHash("/");
+    this.onBtnClick = function(){
+        spa_enging.switchView("/");
     }
 }
+
+//不能直接在构造函数里面使用 CoreView.call(this,null), CoreView经过编译后变成了一个函数
+Car.prototype = new CoreView();

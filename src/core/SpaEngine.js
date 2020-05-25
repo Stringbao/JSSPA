@@ -1,4 +1,5 @@
 
+import View from "./View.js";
 import SpaRouterManager from "./SpaRouterManager.js";
 import SpaViewManager from "./SpaViewManager.js";
 import SpaResourceLoader from "./SpaResourceLoader.js";
@@ -6,19 +7,19 @@ import util from "../util/tool.js";
 import define from "../util/define.js";
 
 let tool = {
-    findConfigByName(data,name){
+    findConfigByHash(data,hash){
         let res = null;
         data.forEach(item => {
-            if(item.name == name){
+            if(item.router == hash){
                 res = item;
             }
         });
         return res;
     },
-    findViewByHash(data,hash){
+    getDefaultConfig(data){
         let res = null;
         data.forEach(item => {
-            if(item._router == hash){
+            if(item.default){
                 res = item;
             }
         });
@@ -35,40 +36,51 @@ export default class SpaEngine{
         this._spaRouterManager = new SpaRouterManager();
 
         this._currentView = null;
+        this._nextView = null;
         this._views = [];
-    }   
+    }
 
     run(container){
+        let that = this;
         this._container = $(container);
         let public_asset = this._config.public_asset;
         //加载公用资源
-        SpaResourceLoader.loadFiles(public_asset);
+        SpaResourceLoader.loadFileQueue(public_asset,0,()=>{
+            let defaultItem = tool.getDefaultConfig(this._config.views);
+            if(!defaultItem){
+                defaultItem = this._config._views[0];
+            }
+            history.pushState(null, '', "#"+defaultItem.router);
+            that.switchView(defaultItem.router);
+        });
 
-        this._spaRouterManager.watchURI();
-
+        that._spaRouterManager.watchURI();
         util._event_publisher.on(define.URI.CHANGEHASH,(hash=>{
-            this.switchViewByHash(hash);
+            that.switchView(hash);
         }))
     }
 
-    switchView(view){
-        this._currentView = view;
-        this._currentView.registerAsset();
-        view._beforeEnter && view._beforeEnter(view);
-        this._spaViewManager.load(this._currentView,this._container).then(x=>{
-            view.onReady();
+    switchView(hash){
+        let config = tool.findConfigByHash(this._config.views,hash);
+        if(!config){
+            return;
+        }
+        
+        //load js --> create View --> SpaViewManager load(View) -->append view to _views
+        let js = config.template;
+        let jsPath = js.substring(0,js.indexOf('html')) + "js";
+        SpaResourceLoader.appendJs(jsPath).then(x=>{
+            let str = "new "+config.class+"();";
+            let view = eval(str);
+            view.init(config);
+            view.registerAsset();
+            this._spaViewManager.load(view,this._container).then(x=>{
+                view._beforeEnter && view._beforeEnter(view);
+                view.onReady();
+                this._views.push(view);
+            });
         })
-    }
-
-    switchViewByHash(hash){
-        let view = tool.findViewByHash(this._views, hash);
-        this.switchView(view);
-    }
-
-    registerView(view){
-        let config = tool.findConfigByName(this._config.views,view._name);
-        view.init(config);
-        this._views.push(view);
     }
 }
 
+window.CoreView = View;

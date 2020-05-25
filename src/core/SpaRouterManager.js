@@ -4,8 +4,7 @@ import define from "../util/define.js";
 
 export default class SpaRouterManager{
     constructor(){
-        this._currentView = null;
-        this._nextView = null;
+        
     }
 
     getCurrentHash(){
@@ -22,12 +21,12 @@ export default class SpaRouterManager{
     }
 
     watchURI(){
-        let hash = this.getCurrentHash();
-        //首次加载
-        window.addEventListener("DOMContentLoaded",function(){
-            history.pushState(null, '', "#"+hash);
-            util._event_publisher.broadcast(define.URI.CHANGEHASH,hash);
-        })
+        // let hash = this.getCurrentHash();
+        //first load
+        // window.addEventListener("onload",function(){
+        //     history.pushState(null, '', "#"+hash);
+        //     util._event_publisher.broadcast(define.URI.CHANGEHASH,hash);
+        // })
 
         //hash changed
         window.addEventListener('popstate', (e)=> {
