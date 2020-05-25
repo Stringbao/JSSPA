@@ -31,6 +31,7 @@ export default class SpaRouterManager{
         //hash changed
         window.addEventListener('popstate', (e)=> {
             let nextHash = this.getCurrentHash();
+            history.pushState(null, '', "#"+nextHash);
             util._event_publisher.broadcast(define.URI.CHANGEHASH,nextHash);
         });
     }

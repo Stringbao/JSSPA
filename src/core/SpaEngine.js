@@ -55,12 +55,7 @@ export default class SpaEngine{
         let public_asset = this._config.public_asset;
         //加载公用资源
         SpaResourceLoader.loadFileQueue(public_asset,0,()=>{
-            let defaultItem = tool.getDefaultConfig(this._config.views);
-            if(!defaultItem){
-                defaultItem = this._config._views[0];
-            }
-            history.pushState(null, '', "#"+defaultItem.router);
-            that.switchView(defaultItem.router);
+            that.switchView(that._spaRouterManager.getCurrentHash());
         });
 
         that._spaRouterManager.watchURI();
@@ -74,9 +69,8 @@ export default class SpaEngine{
         if(!config){
             return;
         }
-
+        history.pushState(null, '', "#"+hash);
         let view = tool.getViewByName(this._views,config.name);
-        debugger
         this._prevView = this._currentView;
 
         this._prevView && this._prevView.beforeLeave && this._prevView.beforeLeave(this._prevView);

@@ -18,11 +18,11 @@ let Person = function(){
     }
 
     this.beforeEnter = function(data){
-        debugger
+        // spa_enging.switchView("/car");
     }
 
     this.beforeLeave = function(data){
-        debugger
+        
     }
 }
 
