@@ -7,13 +7,22 @@ let Person = function(){
 
     this.onReady = function(){
         let that = this;
-        this.$("#person").click(function(){
+        this.$event("click","#aaa",function(e){
+            console.log(123);
             that.onBtnClick();
         })
     }
 
     this.onBtnClick = function(){
         spa_enging.switchView("/car");
+    }
+
+    this.beforeEnter = function(data){
+        debugger
+    }
+
+    this.beforeLeave = function(data){
+        debugger
     }
 }
 

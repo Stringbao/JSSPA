@@ -6,7 +6,8 @@ let Car = function(){
 
     this.onReady = function(){
         let that = this;
-        this.$("#car").click(function(){
+        this.$event("click","#aaa",function(e){
+            console.log(456);
             that.onBtnClick();
         })
     }

@@ -24,6 +24,15 @@ let tool = {
             }
         });
         return res;
+    },
+    getViewByName(data,name){
+        let res = null;
+        data.forEach(item => {
+            if(item._name == name){
+                res = item;
+            }
+        });
+        return res;
     }
 }
 
@@ -36,7 +45,7 @@ export default class SpaEngine{
         this._spaRouterManager = new SpaRouterManager();
 
         this._currentView = null;
-        this._nextView = null;
+        this._prevView = null;
         this._views = [];
     }
 
@@ -65,20 +74,38 @@ export default class SpaEngine{
         if(!config){
             return;
         }
-        
-        //load js --> create View --> SpaViewManager load(View) -->append view to _views
-        let js = config.template;
-        let jsPath = js.substring(0,js.indexOf('html')) + "js";
-        SpaResourceLoader.appendJs(jsPath).then(x=>{
-            let str = "new "+config.class+"();";
-            let view = eval(str);
-            view.init(config);
-            view.registerAsset();
-            this._spaViewManager.load(view,this._container).then(x=>{
-                view._beforeEnter && view._beforeEnter(view);
-                view.onReady();
-                this._views.push(view);
-            });
+
+        let view = tool.getViewByName(this._views,config.name);
+        debugger
+        this._prevView = this._currentView;
+
+        this._prevView && this._prevView.beforeLeave && this._prevView.beforeLeave(this._prevView);
+
+        if(view && view._cache.template){
+            this._currentView = view;
+            this._spaViewManager.laodView(view,this._container);
+            view.onReady();
+        }else{
+            //load js --> create View --> SpaViewManager load(View) -->append view to _views
+            let js = config.template;
+            let jsPath = js.substring(0,js.indexOf('html')) + "js";
+            SpaResourceLoader.appendJs(jsPath).then(x=>{
+                let str = "new "+config.class+"();";
+                let view = eval(str);
+                view.init(config);
+                view.registerAsset();
+                this._spaViewManager.load(view,this._container).then(x=>{
+                    view.onReady();
+                    this._views.push(view);
+                    this._currentView = view;
+                });
+            })
+        }
+    }
+
+    clearCache(){
+        this._views.forEach(x=>{
+            x._cache.template = "";
         })
     }
 }

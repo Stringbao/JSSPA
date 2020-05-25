@@ -16,16 +16,15 @@ export default class View{
         this._template = options.template;
         this._class = options.class;
 
-        this._beforeEnter = options.beforeEnter?options.beforeEnter:null;
-        this._beforeLeval = options.beforeLeval?options.beforeLeval:null;
-        this._destory = options.destory?options.destory:null;
-
         this._css = [];
         this._js = [];
     }
 
-    $(selector){
-        return $("#"+this._id).find(selector);
+    $event(handle,selector,cb){
+        let tmpSelector = "#"+this._id + " " +selector;
+        $("body").off(handle,tmpSelector).on(handle,tmpSelector,function(e){
+            cb && cb(e);
+        })
     }
 
     onReady(){

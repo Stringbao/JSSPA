@@ -44,13 +44,11 @@ export default {
         if(suff == define.SUFFIX.CSS){
             this.appendCss(tmp).then(x=>{
                 count++;
-                console.log(tmp);
                 this.loadFileQueue(fileArray,count,cb);
             })
         }else{
             this.appendJs(tmp).then(x=>{
                 count++;
-                console.log(tmp);
                 this.loadFileQueue(fileArray,count,cb);
             })
         }

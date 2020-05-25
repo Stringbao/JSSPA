@@ -6,6 +6,11 @@ export default class SpaViewManager{
         
     }
 
+    laodView(view,container){
+        view.beforeEnter && view.beforeEnter(view);
+        DomMangager.appendToContainer(container, $(view._cache.template));
+    }
+
     load(view,container){
         return new Promise((resolve,reject)=>{
             //load css
@@ -18,6 +23,7 @@ export default class SpaViewManager{
                         resolve();
                     }else{
                         SpaResourceLoader.loadTemplate(view._template).then(x=>{
+                            view.beforeEnter && view.beforeEnter(view);
                             let rootDiv = $("<div id='"+view._id+"'></div>");
                             rootDiv.append($(x));
                             DomMangager.appendToContainer(container, rootDiv);
