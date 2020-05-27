@@ -70,17 +70,20 @@ export default class SpaEngine{
             return;
         }
         history.pushState(null, '', "#"+hash);
-        let view = tool.getViewByName(this._views,config.name);
+        
         this._prevView = this._currentView;
-
         this._prevView && this._prevView.beforeLeave && this._prevView.beforeLeave(this._prevView);
 
-        if(view && view._cache.template){
-            this._currentView = view;
-            this._spaViewManager.laodView(view,this._container);
+        if(config.__isLoaded){
+            let str = "new "+config.class+"();";
+            let view = eval(str);
+            view.init(config);
+            view.registerAsset();
+            this._spaViewManager.laodTemplate(view,this._container);
             view.onReady();
+            this._currentView = view;
         }else{
-            //load js --> create View --> SpaViewManager load(View) -->append view to _views
+            //load js --> create View --> SpaViewManager loadView --> set cache
             let js = config.template;
             let jsPath = js.substring(0,js.indexOf('html')) + "js";
             SpaResourceLoader.appendJs(jsPath).then(x=>{
@@ -88,19 +91,16 @@ export default class SpaEngine{
                 let view = eval(str);
                 view.init(config);
                 view.registerAsset();
-                this._spaViewManager.load(view,this._container).then(x=>{
+                this._spaViewManager.loadView(view,this._container).then(x=>{
                     view.onReady();
-                    this._views.push(view);
+                    config.__isLoaded = true;
+                    config.__tmplateStr = x;
+                    view._isLoaded = true;
+                    view._cache.template = x;
                     this._currentView = view;
                 });
             })
         }
-    }
-
-    clearCache(){
-        this._views.forEach(x=>{
-            x._cache.template = "";
-        })
     }
 }
 

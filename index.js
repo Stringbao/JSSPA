@@ -8,7 +8,6 @@ let config = {
     ],
     views:[
         {
-            default:true,
             name:"person",
             class:"Person",
             router:"/",

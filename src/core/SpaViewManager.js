@@ -3,15 +3,15 @@ import SpaResourceLoader from "./SpaResourceLoader.js";
 
 export default class SpaViewManager{
     constructor(){
-        
+       
     }
 
-    laodView(view,container){
+    laodTemplate(view,container){
         view.beforeEnter && view.beforeEnter(view);
         DomMangager.appendToContainer(container, $(view._cache.template));
     }
 
-    load(view,container){
+    loadView(view,container){
         return new Promise((resolve,reject)=>{
             //load css
             SpaResourceLoader.loadFileQueue(view._css,0,()=>{
@@ -28,7 +28,7 @@ export default class SpaViewManager{
                             rootDiv.append($(x));
                             DomMangager.appendToContainer(container, rootDiv);
                             view._cache.template = rootDiv[0].outerHTML;
-                            resolve();
+                            resolve(view._cache.template);
                         })
                     }
                 });

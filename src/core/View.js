@@ -15,6 +15,8 @@ export default class View{
         this._router = options.router;
         this._template = options.template;
         this._class = options.class;
+        this._isLoaded = options.__isLoaded;
+        this._cache.template = options.__tmplateStr;
 
         this._css = [];
         this._js = [];
